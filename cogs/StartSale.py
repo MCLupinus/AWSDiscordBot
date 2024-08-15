@@ -151,7 +151,7 @@ class Sale(commands.Cog):
             sale_end_date = join_date + datetime.timedelta(days=3)
             duration = (sale_end_date - current_time).total_seconds() / 3600  # 時間単位に変換
         else:
-            duration = 24  # 1日間 (24時間)
+            return
 
         channel1 = discord.utils.get(guild.channels, name=SALE_CHANNEL)
         channel2 = discord.utils.get(guild.channels, name=DEFAULT_CHANNEL)
