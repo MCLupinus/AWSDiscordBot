@@ -82,8 +82,10 @@ class Support(commands.Cog):
 
         try:
             # チャンネルを優先対応カテゴリに移動
-            await channel.edit(category=priority_category, position=len(interaction.guild.get_channel(int(priority_category)).channels))
-            if channel != interaction.channel:
+            priority_category_obj = interaction.guild.get_channel(int(priority_category))
+
+            if priority_category_obj and isinstance(priority_category_obj, discord.CategoryChannel):
+                await channel.edit(category=priority_category_obj, position=len(priority_category_obj.channels))
                 await interaction.response.send_message(f"{channel.mention} を優先対応カテゴリに移動しました。")
                 await channel.send("```📌このお問い合わせは優先対応としてマークされました。```")
             else:
