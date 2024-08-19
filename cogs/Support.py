@@ -26,11 +26,11 @@ class Support(commands.Cog):
             guild_id = str(channel.guild.id)
 
             # ギルドIDが見つかったのでデータを取得
-            priority_role = data[guild_id]['priority_response']['roles']        # ロール
-            priority_category = data[guild_id]['priority_response']['category'] # カテゴリー
-
-            if not priority_category:
-                print("error: 優先カテゴリーが見つかりません")
+            try:
+                priority_role = data[guild_id]['priority_response']['roles']        # ロール
+                priority_category = data[guild_id]['priority_response']['category'] # カテゴリー
+            except:    
+                print("error: 優先対応するロールとカテゴリーを設定してください")
                 return
 
             # チャンネルのメンバーをフェッチ
@@ -46,7 +46,7 @@ class Support(commands.Cog):
                         # チャンネルを「優先対応」カテゴリに移動
                         await channel.edit(category=channel.guild.get_channel(priority_category), position=0)
                         print(f"{channel.name} を優先対応カテゴリに移動しました。")
-                        await channel.send("```📌このお問い合わせは優先対応としてマークされました。```")
+                        await channel.send(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を少々お待ち下さい")
                         return
             
             print("優先対応が必要なメンバーはいません。")
@@ -87,9 +87,9 @@ class Support(commands.Cog):
             if priority_category_obj and isinstance(priority_category_obj, discord.CategoryChannel):
                 await channel.edit(category=priority_category_obj, position=len(priority_category_obj.channels))
                 await interaction.response.send_message(f"{channel.mention} を優先対応カテゴリに移動しました。")
-                await channel.send("```📌このお問い合わせは優先対応としてマークされました。```")
+                await channel.send(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を少々お待ち下さい")
             else:
-                await interaction.response.send_message("```📌このお問い合わせは優先対応としてマークされました。```")
+                await interaction.response.send_message(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を少々お待ち下さい")
         except discord.Forbidden:
             await interaction.response.send_message("チャンネルを移動する権限がありません。")
         except discord.HTTPException:
