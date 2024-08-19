@@ -39,9 +39,9 @@ class RoleManagement(commands.Cog):
 
         action = "付与" if add_role else "削除"
         if processed_members:
-            result = f"メンバーから{role.mention} ロールを{action}しました\n> {action}されたメンバー：" + " ".join(processed_members)
+            result = f"{role.mention} ロールを{action}しました\n> {action}されたメンバー：" + " ".join(processed_members)
         else:
-            result = f"指定されたメンバーは既にロールが{action}されているか、ロールの{action}に失敗しました。"
+            result = f"指定されたメンバーは既にロールが{action}されています"
 
         await interaction.response.send_message(result)
 

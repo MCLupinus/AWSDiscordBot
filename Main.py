@@ -5,6 +5,8 @@ import os
 # メイン
 TOKEN = os.getenv("UNGURA_DISCORD_TOKEN")
 
+IGNORE_LIST = ["StartSale.py"]
+
 if TOKEN is None:
     raise ValueError("Discord BOTトークンが見つかりません")
 
@@ -18,7 +20,7 @@ class MyBot(commands.Bot):
 
     async def setup_hook(self):
         for filename in os.listdir("./cogs"):
-            if filename.endswith(".py"):
+            if filename.endswith(".py") and not filename in IGNORE_LIST:
                 await bot.load_extension(f"cogs.{filename[:-3]}")
                 print(f"{filename}を読み込み")
         # インタラクションをシンクする。ギルドコマンドなので即時反映。
