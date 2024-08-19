@@ -88,6 +88,7 @@ class Setting(commands.Cog):
                 result = None
                 await interaction.followup.send("指定されたIDのカテゴリーは見つかりませんでした", ephemeral=True)
 
+        data[str(interaction.guild_id)].setdefault("priority_response", {})
         data[str(interaction.guild_id)]["priority_response"][option] = result
         DataJson.save_json(self, data)
 
