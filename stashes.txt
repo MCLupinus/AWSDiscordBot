@@ -1,0 +1,486 @@
+
+    {
+		coords = vec3(1498.62, -2124.05, 76.88),
+		target = {
+			loc = vec3(1498.62, -2124.05, 76.88),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure0',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(1563.16, -2202.19, 77.65),
+		target = {
+			loc = vec3(1563.16, -2202.19, 77.65),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure1',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(1421.96, -2312.61, 75.77),
+		target = {
+			loc = vec3(1421.96, -2312.61, 75.77),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure2',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(455.51, -3109.49, 6.07),
+		target = {
+			loc = vec3(455.51, -3109.49, 6.07),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure3',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(607.65, -3089.58, 6.07),
+		target = {
+			loc = vec3(607.65, -3089.58, 6.07),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure4',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(585.36, -3212.92, 27.09),
+		target = {
+			loc = vec3(585.36, -3212.92, 27.09),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure5',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(-2606.12, 1914.96, 160.67),
+		target = {
+			loc = vec3(-2606.12, 1914.96, 160.67),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure6',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(756.0, -1123.6, 36.55),
+		target = {
+			loc = vec3(756.0, -1123.6, 36.55),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure7',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(835.51, -1294.44, 28.24),
+		target = {
+			loc = vec3(835.51, -1294.44, 28.24),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure8',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(927.44, -1488.06, 30.49),
+		target = {
+			loc = vec3(927.44, -1488.06, 30.49),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure9',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(909.33, -1499.83, 36.0),
+		target = {
+			loc = vec3(909.33, -1499.83, 36.0),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure10',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(854.17, -1543.2, 30.18),
+		target = {
+			loc = vec3(854.17, -1543.2, 30.18),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure11',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(948.57, -1719.83, 30.68),
+		target = {
+			loc = vec3(948.57, -1719.83, 30.68),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure12',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(918.33, -1696.98, 42.06),
+		target = {
+			loc = vec3(918.33, -1696.98, 42.06),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure13',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(990.4, -1798.43, 31.63),
+		target = {
+			loc = vec3(990.4, -1798.43, 31.63),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure14',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(10165.9, -1941.32, 30.95),
+		target = {
+			loc = vec3(10165.9, -1941.32, 30.95),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure15',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(1107.91, -1956.42, 30.96),
+		target = {
+			loc = vec3(1107.91, -1956.42, 30.96),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure16',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(196.52, -595.49, 43.87),
+		target = {
+			loc = vec3(196.52, -595.49, 43.87),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure17',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(303.95, -569.68, 43.28),
+		target = {
+			loc = vec3(303.95, -569.68, 43.28),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure18',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(139.93, -1056.5, 29.19),
+		target = {
+			loc = vec3(139.93, -1056.5, 29.19),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure19',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(154.51, -1057.68, 41.98),
+		target = {
+			loc = vec3(154.51, -1057.68, 41.98),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure20',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(1274.25, -1071.98, 77.54),
+		target = {
+			loc = vec3(1274.25, -1071.98, 77.54),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure21',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(461.34, -1012.63, 32.98),
+		target = {
+			loc = vec3(461.34, -1012.63, 32.98),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure22',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(525.34, -989.51, 27.82),
+		target = {
+			loc = vec3(525.34, -989.51, 27.82),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure23',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(523.76, -1261.86, 21.29),
+		target = {
+			loc = vec3(523.76, -1261.86, 21.29),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure24',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(584.73, -1191.72, 9.43),
+		target = {
+			loc = vec3(584.73, -1191.72, 9.43),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure25',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},
+
+    {
+		coords = vec3(741.24, -1058.2, 22.04),
+		target = {
+			loc = vec3(741.24, -1058.2, 22.04),
+			length = 1.2,
+			width = 1.6,
+			heading = 0,
+			minZ = 29.49,
+			maxZ = 32.09,
+			label = '宝箱を開く'
+		},
+		name = 'treasure26',
+		label = '宝箱',
+		owner = false,
+		slots = 1,
+		weight = 7000000,
+	},

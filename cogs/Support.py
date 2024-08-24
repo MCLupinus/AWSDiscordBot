@@ -2,9 +2,6 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from .Data import DataJson
-import json
-
-BOT_DATA_FILE = "bot_data.json"
 
 class Support(commands.Cog):
     def __init__(self, bot):
@@ -20,7 +17,7 @@ class Support(commands.Cog):
 
             # ギルドIDが見つからなければここで終了
             if not str(channel.guild.id) in data:
-                await channel.send("このサーバーのデータが見つかりませんでした\n`/uncut`を試してください", ephemeral=True)
+                await channel.send("このサーバーのデータが見つかりませんでした\n`/reload`を試してください", ephemeral=True)
                 return
 
             guild_id = str(channel.guild.id)
@@ -68,7 +65,7 @@ class Support(commands.Cog):
 
         # ギルドIDが見つからなければここで終了
         if not str(channel.guild.id) in data:
-            await channel.send("このサーバーのデータが見つかりませんでした\n`/uncut`を試してください", ephemeral=True)
+            await channel.send("このサーバーのデータが見つかりませんでした\n`/reload`を試してください", ephemeral=True)
             return
 
         guild_id = str(channel.guild.id)

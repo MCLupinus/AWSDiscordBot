@@ -62,7 +62,7 @@ class Sale(commands.Cog):
         try:
             if duration is None:
                 duration = self.load_default_duration()
-            
+
             if duration < 0.5 or duration > 720:
                 await interaction.followup.send("時間は0.5時間（約30分）から720時間（30日）の間で指定してください。", ephemeral=True)
                 return

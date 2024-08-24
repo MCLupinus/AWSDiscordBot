@@ -30,8 +30,16 @@ class DataJson(commands.Cog):
     # Jsonを保存
     def save_json(self, data):
         with open(JSON_FILE_NAME, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
+             json.dump(data, f, indent=4, ensure_ascii=False)
         print(f"{JSON_FILE_NAME}を保存しました。")
+
+    def update_dict(self, original, target):
+        for key, value in original.items():
+            if key not in target:
+                target[key] = value
+            elif isinstance(value, dict) and isinstance(target[key], dict):
+                self.update_dict(value, target[key])
+        return target
 
     # BOT起動時にチェック
     @commands.Cog.listener()
@@ -45,8 +53,39 @@ class DataJson(commands.Cog):
         if str(guild.id) not in data:
             data[str(guild.id)] = {
             }
-            self.save_json(data)
+            await self.save_json(data)
         print(f"{guild.name} (ID: {guild.id}) のデータを{JSON_FILE_NAME}に追加しました。")
+
+    @app_commands.command(name="reload", description="BOTの状態を再読み込みします")
+    @commands.has_any_role('管理者', 'Discord対応')
+    async def reload(self, interaction: discord.Interaction):
+        await interaction.response.send_message("再読み込みを開始します...")
+        data = self.load_or_create_json()
+        original_data = {
+            str(interaction.guild_id):{
+                "members": {
+                    str(member.id): {
+                        "sale":{
+                            "sale_count": 0,
+                            "until":None
+                        },
+                        "calculate":0
+                    } for member in interaction.guild.members
+                },
+                "priority_response":{
+                    "roles": None,
+                    "category": None
+                },
+                "invoice": {
+
+                }
+            }
+        }
+
+        updated_data = self.update_dict(original_data, data)
+
+        self.save_json(updated_data)
+        await interaction.edit_original_response(content="再読み込みしました。")
 
 async def setup(bot):
     await bot.add_cog(DataJson(bot))
