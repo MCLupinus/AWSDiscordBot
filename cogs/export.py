@@ -36,7 +36,7 @@ class Export(commands.Cog):
                     except_text.append(char)
                     
         if not len(except_text) == 0:
-            await interaction.response.send_message(f"次の文字は無効です{except_text}")
+            await interaction.response.send_message(f"次の文字は無効です{except_text}", ephemeral=True)
             return
 
         result = ""
@@ -67,7 +67,7 @@ class Export(commands.Cog):
         
         # ファイルを送信
         with open("stashes.txt", "rb") as file:
-            await interaction.response.send_message("ファイルをエクスポートしました", file=discord.File(file, "stashes.txt"))
+            await interaction.response.send_message("ファイルをエクスポートしました", file=discord.File(file, "stashes.txt"), ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(Export(bot))
