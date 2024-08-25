@@ -69,7 +69,9 @@ class DataJson(commands.Cog):
                             "sale_count": 0,
                             "until":None
                         },
-                        "calculate":0
+                        "calculate":0,
+                        "API_limit":0,
+                        "point":0
                     } for member in interaction.guild.members
                 },
                 "priority_response":{
