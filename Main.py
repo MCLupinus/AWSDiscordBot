@@ -5,7 +5,7 @@ import os
 # メイン
 TOKEN = os.getenv("UNGURA_DISCORD_TOKEN")
 
-IGNORE_LIST = ["StartSale.py", "Calculator.py"]
+IGNORE_LIST = ["StartSale.py"]
 
 if TOKEN is None:
     raise ValueError("Discord BOTトークンが見つかりません")

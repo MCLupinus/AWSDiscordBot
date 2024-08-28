@@ -2,7 +2,6 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from .Data import DataJson
-import re
 
 class QuantityModal(discord.ui.Modal):
     def __init__(self, view):
@@ -10,9 +9,8 @@ class QuantityModal(discord.ui.Modal):
         self.view = view
         self.quantity_input = discord.ui.TextInput(
             label="数量",
-            placeholder="購入する数量を入力してください",
-            default="1",
-            min_length=1,
+            placeholder="1",
+            min_length=0,
             max_length=5
         )
         self.add_item(self.quantity_input)
@@ -20,9 +18,11 @@ class QuantityModal(discord.ui.Modal):
     async def on_submit(self, interaction: discord.Interaction):
         try:
             self.view.quantity = int(self.quantity_input.value)
-            await interaction.response.defer()
+            message = interaction.message.content + f"\n```次の請求額を{int(self.quantity_input.value)}倍します```"
+
+            await interaction.response.edit_message(content=message)
         except ValueError:
-            await interaction.response.send_message("無効な数量です。正の整数を入力してください。", ephemeral=True)
+            self.view.quantity = 1
 
 class CalculatorSelectView(discord.ui.View):
     def __init__(self, interaction: discord.Interaction, data: dict[str, dict], tag: str):
@@ -80,7 +80,7 @@ class CalculatorSelectView(discord.ui.View):
             current_value -= current_value * selected_amount
         else:
             # 普通の計算をする
-            current_value += selected_amount
+            current_value += selected_amount * self.quantity
 
         # 計算結果を保存
         try:
@@ -92,21 +92,30 @@ class CalculatorSelectView(discord.ui.View):
         # 処理結果を編集
         current_message = interaction.message.content
         splited_message = current_message.split("```")
+
+        # 複数の請求がある場合
+        if self.quantity == 1:
+            quantity_text = ""
+        else:
+            quantity_text = f"x{self.quantity}"
+
         if selected_amount <= -1:
             # 入っている値がマイナスであればその値段引きとする
-            add_message = f"{selected_option}({int(selected_amount * -1)}円引き)\n"
+            add_message = f"{selected_option}({int(selected_amount * -1)}円引き){quantity_text}\n"
         elif selected_amount < 1:
             # 入っている値が0以上1未満であればその値段割引とする
             add_message = f"{selected_option}({int(selected_amount * 100)}%引き)\n"
         else:
             # 通常の値段は請求額とする
-            add_message = f"{selected_option}({int(selected_amount)}円)\n"
+            add_message = f"{selected_option}({int(selected_amount)}円){quantity_text}\n"
 
         splited_message[1] += add_message
-        
+
         result = f"{splited_message[0]}```{splited_message[1]}```\n## 合計金額 : {int(current_value)}円"
 
         await interaction.response.edit_message(content=result)
+
+        self.quantity = 1
 
 class Calculator(commands.Cog):
     def __init__(self, bot):

@@ -65,15 +65,16 @@ class DataJson(commands.Cog):
             str(interaction.guild_id):{
                 "members": {
                     str(member.id): {
-                        "sale":{
-                            "sale_count": 0,
-                            "until":None
+                        "limited_roles":{
+                            "count": 0,
+                            "duration": None
                         },
                         "calculate":0,
                         "API_limit":0,
                         "point":0
                     } for member in interaction.guild.members
                 },
+                "limited_roles_default": None,
                 "priority_response":{
                     "roles": None,
                     "category": None
