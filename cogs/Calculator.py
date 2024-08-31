@@ -17,8 +17,15 @@ class QuantityModal(discord.ui.Modal):
 
     async def on_submit(self, interaction: discord.Interaction):
         try:
-            self.view.quantity = int(self.quantity_input.value)
-            message = interaction.message.content + f"\n```次の請求額を{int(self.quantity_input.value)}倍します```"
+            self.view.quantity = float(self.quantity_input.value)
+
+            if 1 < float(self.quantity_input.value):
+                message = interaction.message.content + f"\n```次の請求額を{int(self.quantity_input.value)}倍します```"
+            elif 0 < float(self.quantity_input.value):
+                message = interaction.message.content + f"\n```次の請求額を{int(float(self.quantity_input.value)*100)}%引きします```"
+            else:
+                self.view.quantity = 1
+                return
 
             await interaction.response.edit_message(content=message)
         except ValueError:
@@ -42,18 +49,18 @@ class CalculatorSelectView(discord.ui.View):
         for i in range(len(items)):
             if amounts[i] <= -1:
                 # 入っている値がマイナスであればその値段引きとする
-                options.append(discord.SelectOption(label=items[i], description=f"{amounts[i] * -1}円引き"))
+                options.append(discord.SelectOption(label=items[i], description=f"{int(amounts[i] * -1)}円引き"))
             elif amounts[i] < 1:
                 # 入っている値が0以上1未満であればその値段割引とする
-                options.append(discord.SelectOption(label=items[i], description=f"{amounts[i] * 100}%引き"))
+                options.append(discord.SelectOption(label=items[i], description=f"{int(amounts[i] * 100)}%引き"))
             else:
                 # 通常の値段は請求額とする
-                options.append(discord.SelectOption(label=items[i], description=f"請求額：{amounts[i]}円"))
+                options.append(discord.SelectOption(label=items[i], description=f"請求額：{int(amounts[i])}円"))
         
         select = discord.ui.Select(placeholder="請求内容を選択", options=options)
         select.callback = self.select_callback
         return select
-    
+
     def create_quantity_button(self):
         button = discord.ui.Button(label="数量を入力", style=discord.ButtonStyle.primary)
         button.callback = self.quantity_button_callback
@@ -78,9 +85,14 @@ class CalculatorSelectView(discord.ui.View):
         if -1 < selected_amount and selected_amount < 1:
             # 1未満の小数であれば割引計算
             current_value -= current_value * selected_amount
+            print(f"{current_value * selected_amount}円を減算")
+        elif 1 > self.quantity:
+            current_value += selected_amount - (selected_amount * self.quantity)
+            print(f"{selected_amount * self.quantity}円割引")
         else:
             # 普通の計算をする
             current_value += selected_amount * self.quantity
+            print(f"{selected_amount * self.quantity}円を加算")
 
         # 計算結果を保存
         try:
@@ -96,8 +108,10 @@ class CalculatorSelectView(discord.ui.View):
         # 複数の請求がある場合
         if self.quantity == 1:
             quantity_text = ""
+        elif 1 > self.quantity:
+            quantity_text = f"-{int(self.quantity * 100)}%"
         else:
-            quantity_text = f"x{self.quantity}"
+            quantity_text = f"x{int(self.quantity)}"
 
         if selected_amount <= -1:
             # 入っている値がマイナスであればその値段引きとする

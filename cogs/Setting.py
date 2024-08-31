@@ -53,13 +53,11 @@ class Setting(commands.Cog):
         # 時間がかかる場合があるため一旦送信する
         await interaction.response.defer(ephemeral=True)
 
-        data = DataJson.load_or_create_json(self)
-
-        # データが見つからなければエラー
-        if not str(interaction.guild_id) in data:
-            await interaction.followup.send("このサーバーのデータが見つかりませんでした\n`/reload`を試してください", ephemeral=True)
-            return
-
+        try:
+            data = DataJson.get_data(self, interaction.guild_id)
+        except ValueError as e:
+            await interaction.response.send_message(e, ephemeral=True)
+        
         # targetが空だったら空のデータを作成する
         if target == None:
             null_data = {
@@ -109,13 +107,11 @@ class Setting(commands.Cog):
         amount="請求額"
     )
     async def add_invoice(self, interaction: discord.Interaction, tag: str, item: str, amount: float):
-        data = DataJson.load_or_create_json(self)
-
-        # データが見つからなければエラー
-        if not str(interaction.guild_id) in data:
-            await interaction.response.send_message("このサーバーのデータが見つかりませんでした\n`/reload`を試してください", ephemeral=True)
-            return
-
+        try:
+            data = DataJson.get_data(self, interaction.guild_id)
+        except ValueError as e:
+            await interaction.response.send_message(e, ephemeral=True)
+        
         data[str(interaction.guild_id)].setdefault(INVOICE, {})
 
         # tagが存在するか確認してログに書き込む
@@ -132,9 +128,9 @@ class Setting(commands.Cog):
         ### この時点で{tag}は確実に存在する
 
         # 請求内容と請求額を追加する
-        if item_list in item:
+        if item in item_list:
             # アイテムの要素番号取得
-            i = item.index(item)
+            i = item_list.index(item)
             # データを上書き
             item_list[i] = item
             amount_list[i] = amount
@@ -155,10 +151,12 @@ class Setting(commands.Cog):
         
         if amount <= -1:
             # -1より小さければ値引き額として保存
-            result_log += f"値引き内容 : {item}\n値引き額 : {amount}円"
+            result_log += f"値引き内容 : {item}\n値引き額 : {int(amount * -1)}円"
         elif amount < 1:
             # -1より大きく1より小さければ割引きとして保存
-            result_log += f"割引き内容 : {item}\n割引き : {amount}%"
+            result_log += f"割引き内容 : {item}\n割引き : {int(amount * 100)}%"
+        else:
+            result_log += f"請求内容：{item}\n値段：{int(amount)}円"
 
         await interaction.response.send_message(result_log, ephemeral=True)
 
@@ -168,12 +166,10 @@ class Setting(commands.Cog):
         item="削除する請求内容",
     )
     async def remove_invoice(self, interaction: discord.Interaction, tag: str, item: str):
-        data = DataJson.load_or_create_json(self)
-
-        # データが見つからなければエラー
-        if not str(interaction.guild_id) in data:
-            await interaction.response.send_message("このサーバーのデータが見つかりませんでした\n`/reload`を試してください", ephemeral=True)
-            return
+        try:
+            data = DataJson.get_data(self, interaction.guild_id)
+        except ValueError as e:
+            await interaction.response.send_message(e, ephemeral=True)
         
         item_list = []
         amount_list = []
@@ -200,6 +196,16 @@ class Setting(commands.Cog):
             print("データの保存中にエラーが発生しました")
 
         await interaction.response.send_message(f"{tag}から{item}を削除しました", ephemeral=True)
+
+    @app_commands.command(name="defaulttimelimit", description="期限付きロールの通常有効時間を設定します")
+    async def default_time_limit(self, interaction: discord.Interaction, grant_role: discord.Role, day:int, hours: int=0, minutes: int=0):
+        try:
+            data = DataJson.get_data(self, interaction.guild_id)
+        except:
+            print("データの保存中にエラーが発生しました")
+        data[str(interaction.guild_id)]["limited_roles_default"][grant_role.id] = [day, hours, minutes]
+
+        DataJson.save_json(self, data)
 
 async def setup(bot):
     await bot.add_cog(Setting(bot))

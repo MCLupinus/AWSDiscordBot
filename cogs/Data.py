@@ -7,8 +7,73 @@ import os
 JSON_FILE_NAME = 'config.json'
 
 class DataJson(commands.Cog):
-    def __init__(self, bot):
+    def init(self, bot):
         self.bot = bot
+
+    # jsonデータを読み込み。見つからなければ作成
+    def load_or_create_json(self):
+        data = {}
+        if not os.path.exists(JSON_FILE_NAME):
+            print(f"{JSON_FILE_NAME}を作成します...")
+            data = {
+                str(guild.id): {
+                } for guild in self.bot.guilds
+                }
+            self.save_json(data)
+        else:
+            with open(JSON_FILE_NAME, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            print(f"既存の{JSON_FILE_NAME}を読み込みました。")
+
+        return data
+
+    # Jsonを保存
+    def save_json(self, data):
+        with open(JSON_FILE_NAME, 'w', encoding='utf-8') as f:
+             json.dump(data, f, indent=4, ensure_ascii=False)
+        print(f"{JSON_FILE_NAME}を保存しました。")
+
+    def get_data(self, guild_id: int):
+        data = DataJson.load_or_create_json(self)
+
+        # データが見つからなければエラー
+        if not str(guild_id) in data:
+            ValueError("このサーバーのデータが見つかりませんでした\n`/reload`を試してください")
+
+        return data
+
+    def update_dict(self, original, target):
+        for key, value in original.items():
+            if key not in target:
+                target[key] = value
+            elif isinstance(value, dict) and isinstance(target[key], dict):
+                self.update_dict(value, target[key])
+        return target
+    
+    def get_origin(self, guild_id: str, member_id: str):
+        return {
+            guild_id:{
+                "members": {
+                    member_id: {
+                        "limited_roles":{
+                            "count": 0,
+                            "duration": None
+                        },
+                        "calculate":0,
+                        "API_limit":0,
+                        "point":0
+                    }
+                },
+                "limited_roles_default": None,
+                "priority_response":{
+                    "roles": None,
+                    "category": None
+                },
+                "invoice": {
+
+                }
+            }
+        }
 
     # BOT起動時にチェック
     @commands.Cog.listener()
@@ -46,62 +111,6 @@ class DataJson(commands.Cog):
 
         self.save_json(updated_data)
         await interaction.edit_original_response(content="再読み込みしました。")
-
-    # jsonデータを読み込み。見つからなければ作成
-    def load_or_create_json(self):
-        data = {}
-        if not os.path.exists(JSON_FILE_NAME):
-            print(f"{JSON_FILE_NAME}を作成します...")
-            data = {
-                str(guild.id): {
-                } for guild in self.bot.guilds
-                }
-            self.save_json(data)
-        else:
-            with open(JSON_FILE_NAME, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            print(f"既存の{JSON_FILE_NAME}を読み込みました。")
-
-        return data
-
-    # Jsonを保存
-    def save_json(self, data):
-        with open(JSON_FILE_NAME, 'w', encoding='utf-8') as f:
-             json.dump(data, f, indent=4, ensure_ascii=False)
-        print(f"{JSON_FILE_NAME}を保存しました。")
-
-    def update_dict(self, original, target):
-        for key, value in original.items():
-            if key not in target:
-                target[key] = value
-            elif isinstance(value, dict) and isinstance(target[key], dict):
-                self.update_dict(value, target[key])
-        return target
-
-    def get_origin(self, guild_id: str, member_id: str):
-        return {
-            guild_id:{
-                "members": {
-                    member_id: {
-                        "limited_roles":{
-                            "count": 0,
-                            "duration": None
-                        },
-                        "calculate":0,
-                        "API_limit":0,
-                        "point":0
-                    }
-                },
-                "limited_roles_default": None,
-                "priority_response":{
-                    "roles": None,
-                    "category": None
-                },
-                "invoice": {
-
-                }
-            }
-        }
 
 async def setup(bot):
     await bot.add_cog(DataJson(bot))
