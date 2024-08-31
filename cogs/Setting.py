@@ -107,6 +107,9 @@ class Setting(commands.Cog):
         amount="請求額"
     )
     async def add_invoice(self, interaction: discord.Interaction, tag: str, item: str, amount: float):
+        # タグを小文字に変換
+        tag = tag.lower()
+
         try:
             data = DataJson.get_data(self, interaction.guild_id)
         except ValueError as e:
@@ -166,6 +169,9 @@ class Setting(commands.Cog):
         item="削除する請求内容",
     )
     async def remove_invoice(self, interaction: discord.Interaction, tag: str, item: str):
+        # タグを小文字に変換
+        tag = tag.lower()
+        
         try:
             data = DataJson.get_data(self, interaction.guild_id)
         except ValueError as e:

@@ -137,6 +137,9 @@ class Calculator(commands.Cog):
 
     @app_commands.command(name="calc", description="計算機能を選択します")
     async def calc(self, interaction: discord.Interaction, tag: str):
+        # タグを小文字に変換
+        tag = tag.lower()
+        
         # データの取得
         data = DataJson.load_or_create_json(self)
         if not str(interaction.guild_id) in data:
