@@ -1,7 +1,7 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from .Data import DataJson
+from .Load import DataJson
 
 class Support(commands.Cog):
     def __init__(self, bot):

@@ -6,7 +6,7 @@ import os
 
 JSON_FILE_NAME = 'config.json'
 
-class DataJson(commands.Cog):
+class Load(commands.Cog):
     def init(self, bot):
         self.bot = bot
 
@@ -39,6 +39,14 @@ class DataJson(commands.Cog):
         # データが見つからなければエラー
         if not str(guild_id) in data:
             ValueError("このサーバーのデータが見つかりませんでした\n`/reload`を試してください")
+
+        return data
+    
+    def get_value(self, data, keys):
+        for key in keys:
+            if key not in data:
+                data[key] = None
+                data = data.get(key, {})
 
         return data
 
@@ -113,4 +121,4 @@ class DataJson(commands.Cog):
         await interaction.edit_original_response(content="再読み込みしました。")
 
 async def setup(bot):
-    await bot.add_cog(DataJson(bot))
+    await bot.add_cog(Load(bot))
