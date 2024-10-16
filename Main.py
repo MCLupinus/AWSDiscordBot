@@ -8,10 +8,10 @@ TOKEN = os.getenv("UNGURA_DISCORD_TOKEN")
 # 設定
 discord.Intents.default().members = True
 
-IGNORE_LIST = ["StartSale.py"]
+IGNORE_LIST = ["StartSale.py", "Calculator.py", "EndSale.py", "export.py", "LimitedRole.py", "Load.py", "point.py", "RoleManagement.py", "SaleDuration.py", "Setting.py", "StartSale.py", "Support.py"]
 
 if TOKEN is None:
-    raise ValueError("Discord BOTトークンが見つかりません")
+    raise ValueError("[起動プロセス] Discord BOTトークンが見つかりません")
 
 class MyBot(commands.Bot):
     def __init__(self):
@@ -25,12 +25,12 @@ class MyBot(commands.Bot):
         for filename in os.listdir("./cogs"):
             if filename.endswith(".py") and not filename in IGNORE_LIST:
                 await bot.load_extension(f"cogs.{filename[:-3]}")
-                print(f"{filename}を読み込み")
+                print(f"[起動プロセス] {filename}を読み込み")
         # インタラクションをシンクする。ギルドコマンドなので即時反映。
         await bot.tree.sync()
 
     async def on_ready(self):
-        print("BOTが起動しました")
+        print("[起動プロセス] BOTが起動しました")
 
 bot = MyBot()
 bot.run(TOKEN)
