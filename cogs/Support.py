@@ -1,7 +1,17 @@
+import os
+import sys
+if __name__ == "__main__":
+    os.chdir(".")
+    sys.path.append(os.getcwd())
+    
+    # main.pyを実行
+    os.system(f"{sys.executable} main.py")
+    
+
 import discord
 from discord import app_commands
 from discord.ext import commands
-from .Load import DataJson
+from Database import Database
 
 class Support(commands.Cog):
     def __init__(self, bot):
@@ -11,15 +21,10 @@ class Support(commands.Cog):
     async def on_guild_channel_create(self, channel):
         if isinstance(channel, discord.TextChannel) and "ticket" in channel.name.lower():
             print(f"{channel.name}チャンネルが作成されました")
+            container = Database("config.json")
+            data = container.load_or_create_json()
 
-            # Jsonを開く
-            data = DataJson.load_or_create_json(self)
-
-            # ギルドIDが見つからなければここで終了
-            if not str(channel.guild.id) in data:
-                await channel.send("このサーバーのデータが見つかりませんでした\n`/reload`を試してください", ephemeral=True)
-                return
-
+            # ギルドIDを取得して文字列化
             guild_id = str(channel.guild.id)
 
             # ギルドIDが見つかったのでデータを取得
@@ -53,15 +58,9 @@ class Support(commands.Cog):
     async def force_priority(self, interaction: discord.Interaction, channel: discord.TextChannel = None):
         # チャンネルが指定されていない場合、現在のチャンネルを使用
         channel = channel or interaction.channel
-
-        # チャンネル名に "ticket" が含まれているか確認
-        if "ticket" not in channel.name.lower():
-            await interaction.response.send_message("このコマンドは 'ticket' を含むチャンネル名に対してのみ使用できます。")
-            return
-
-        # 優先対応カテゴリを取得
-        # # Jsonを開く
-        data = DataJson.load_or_create_json(self)
+        
+        container = Database("config.json")
+        data = container.load_or_create_json()
 
         # ギルドIDが見つからなければここで終了
         if not str(channel.guild.id) in data:
@@ -84,9 +83,9 @@ class Support(commands.Cog):
             if priority_category_obj and isinstance(priority_category_obj, discord.CategoryChannel):
                 await channel.edit(category=priority_category_obj, position=len(priority_category_obj.channels))
                 await interaction.response.send_message(f"{channel.mention} を優先対応カテゴリに移動しました。")
-                await channel.send(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を少々お待ち下さい")
+                await channel.send(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を暫くお待ち下さい")
             else:
-                await interaction.response.send_message(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を少々お待ち下さい")
+                await interaction.response.send_message(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を暫くお待ち下さい")
         except discord.Forbidden:
             await interaction.response.send_message("チャンネルを移動する権限がありません。")
         except discord.HTTPException:

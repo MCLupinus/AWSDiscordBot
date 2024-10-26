@@ -2,7 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from discord.utils import get
-from .Load import DataJson
+from Database import Database
 
 # 定数宣言
 PRIORITY_RESPONSE = "priority_response" # 優先対応キー名
@@ -15,6 +15,7 @@ INVOICE_AMOUNT = "amount"               # 請求書の金額キー名
 class Setting(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.config = Database("config.json")
 
     # 優先対応するロールを設定する
     async def set_priority_role(self, interaction, target):
@@ -53,23 +54,12 @@ class Setting(commands.Cog):
         # 時間がかかる場合があるため一旦送信する
         await interaction.response.defer(ephemeral=True)
 
-        try:
-            data = DataJson.get_data(self, interaction.guild_id)
-        except ValueError as e:
-            await interaction.response.send_message(e, ephemeral=True)
-        
         # targetが空だったら空のデータを作成する
         if target == None:
-            null_data = {
-                PRIORITY_RESPONSE: {
-                    option: None
-                }
-            }
+            self.config.set_value(str(interaction.guild_id), PRIORITY_RESPONSE, option, value=None)
 
-            data = DataJson.load_or_create_json(self)
-            data[str(interaction.guild_id)] = null_data
-            DataJson.save_json(self, data)
             await interaction.followup.send(f"{target}を初期化しました")
+            return
 
         result = []
         # ロールの設定
@@ -95,9 +85,7 @@ class Setting(commands.Cog):
                 result = None
                 await interaction.followup.send("指定されたIDのカテゴリーは見つかりませんでした", ephemeral=True)
 
-        data[str(interaction.guild_id)].setdefault(PRIORITY_RESPONSE, {})
-        data[str(interaction.guild_id)][PRIORITY_RESPONSE][option] = result
-        DataJson.save_json(self, data)
+        self.config.set_value(str(interaction.guild_id), PRIORITY_RESPONSE, option, value=result)
 
     # 請求書のリストを作成する
     @app_commands.command(name="addinvoice", description="請求する金額を計算するためのリストに内容を追加します")

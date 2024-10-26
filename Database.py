@@ -30,6 +30,7 @@ class Database():
         data = self.load_or_create_json()
         current_data = data
         for key in keys[:-1]:  # 最後のキーを除いて処理
+            key = str(key)
             if key not in current_data or current_data[key] is None:
                 current_data[key] = {}
                 print(f"[データベースログ] {key}を新規作成しました")
