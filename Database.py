@@ -39,7 +39,7 @@ class Database():
         # 最後のキーに値を挿入
         last_key = keys[-1]
         current_data[last_key] = value
-        print(f"[データベースログ] {last_key}に{value}を代入しました")
+        print(f"[データベースログ] {last_key}に{value}を設定しました")
 
         # データ保存
         self.save_json(data)

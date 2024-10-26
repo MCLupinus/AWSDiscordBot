@@ -1,3 +1,12 @@
+import os
+import sys
+if __name__ == "__main__":
+    os.chdir(".")
+    sys.path.append(os.getcwd())
+    
+    # main.pyを実行
+    os.system(f"{sys.executable} main.py")
+
 import discord
 from discord import app_commands
 from discord.ext import commands

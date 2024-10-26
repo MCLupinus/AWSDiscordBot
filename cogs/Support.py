@@ -7,7 +7,6 @@ if __name__ == "__main__":
     # main.pyを実行
     os.system(f"{sys.executable} main.py")
     
-
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -20,7 +19,7 @@ class Support(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_channel_create(self, channel):
         if isinstance(channel, discord.TextChannel) and "ticket" in channel.name.lower():
-            print(f"{channel.name}チャンネルが作成されました")
+            print(f"[サポート] {channel.name}チャンネルが作成されました")
             container = Database("config.json")
             data = container.load_or_create_json()
 
@@ -32,7 +31,7 @@ class Support(commands.Cog):
                 priority_role = data[guild_id]['priority_response']['roles']        # ロール
                 priority_category = data[guild_id]['priority_response']['category'] # カテゴリー
             except:    
-                print("error: 優先対応するロールとカテゴリーを設定してください")
+                print("[サポート] error: 優先対応するロールとカテゴリーを設定してください")
                 return
 
             # チャンネルのメンバーをフェッチ
@@ -47,11 +46,11 @@ class Support(commands.Cog):
                     if role.id in priority_role:
                         # チャンネルを「優先対応」カテゴリに移動
                         await channel.edit(category=channel.guild.get_channel(priority_category), position=0)
-                        print(f"{channel.name} を優先対応カテゴリに移動しました。")
+                        print(f"[サポート] {channel.name} を優先対応カテゴリに移動しました。")
                         await channel.send(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を少々お待ち下さい")
                         return
             
-            print("優先対応が必要なメンバーはいません。")
+            print("[サポート] 優先対応が必要なメンバーはいません。")
                         
     @app_commands.command(name="priority", description="対象の問い合わせを優先対応として扱います")
     @app_commands.checks.has_any_role("運営", "Discord対応")
