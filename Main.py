@@ -8,7 +8,7 @@ TOKEN = os.getenv("UNGURA_DISCORD_TOKEN")
 # 設定
 discord.Intents.default().members = True
 
-IGNORE_LIST = ["Calculator.py"]
+IGNORE_LIST = ["Calculator.py", "VCTracker.py"]
 
 if TOKEN is None:
     raise ValueError("[起動プロセス] Discord BOTトークンが見つかりません")

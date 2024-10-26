@@ -11,7 +11,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-class RoleManagement(commands.Cog):
+class GameRole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -82,4 +82,4 @@ class RoleManagement(commands.Cog):
         await self.process_role_change(interaction, role, members, add_role=False)
 
 async def setup(bot):
-    await bot.add_cog(RoleManagement(bot))
+    await bot.add_cog(GameRole(bot))
