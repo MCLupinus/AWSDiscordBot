@@ -1,3 +1,12 @@
+import os
+import sys
+if __name__ == "__main__":
+    os.chdir(".")
+    sys.path.append(os.getcwd())
+    
+    # main.pyを実行
+    os.system(f"{sys.executable} main.py")
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -9,10 +18,16 @@ class RoleManagement(commands.Cog):
     async def process_role_change(self, interaction: discord.Interaction, role: discord.Role, members: str, add_role: bool):
         top_role_name = role.name + "-TOP"
         top_role = discord.utils.get(interaction.guild.roles, name=top_role_name)
-        role_member = discord.utils.get(interaction.guild.roles, name=role.name)
 
         is_role_member = role in interaction.user.roles             # 実行者がロールを持っているか
         is_game_role = top_role in interaction.guild.roles          # ゲーム内役職用のロールか(TOPロールの場合は-TOP-TOPとなるため除外される)
+        for interactor_role in interaction.user.roles:              # 実行者が-TOPロールのみを所持している場合を考慮
+            if interactor_role.name == top_role_name:
+                is_role_member = True
+                # 実行者にもつけてあげる
+                await interaction.user.add_roles(role)
+                break
+
         is_admin = interaction.user.guild_permissions.manage_roles  # ロール管理権限を持っているか
 
         if (not is_role_member or not is_game_role) and not is_admin:
