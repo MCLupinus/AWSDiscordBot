@@ -1,7 +1,15 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from .Data import DataJson
+from .Load import DataJson
+
+# TODO: 
+# 返信することで選択できるように変更する
+# 「30」「30[こ, コ, 個]」で個数
+# 「¥1000」「1000円」で特別料金
+# 「10[off, %, オフ, おふ]」で割引き
+# 「-1000」「1000[引き, ひき, びき]」
+
 
 class QuantityModal(discord.ui.Modal):
     def __init__(self, view):
@@ -139,7 +147,7 @@ class Calculator(commands.Cog):
     async def calc(self, interaction: discord.Interaction, tag: str):
         # タグを小文字に変換
         tag = tag.lower()
-        
+
         # データの取得
         data = DataJson.load_or_create_json(self)
         if not str(interaction.guild_id) in data:
