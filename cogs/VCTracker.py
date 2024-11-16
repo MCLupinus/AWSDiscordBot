@@ -13,7 +13,6 @@ from discord.ext import commands, tasks
 from discord.utils import get
 from Database import Database
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 
 TRACKER_INDEX = "VCtrackingTime"
 
