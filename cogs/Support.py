@@ -45,7 +45,10 @@ class Support(commands.Cog):
                 for role in member.roles:
                     if role.id in priority_role:
                         # チャンネルを「優先対応」カテゴリに移動
-                        await channel.edit(category=channel.guild.get_channel(priority_category), position=0)
+                        target_category = channel.guild.get_channel(priority_category)
+                        if 50 <= len(target_category.channels):
+                            target_category = None
+                        await channel.edit(category=target_category, position=0)
                         print(f"[サポート] {channel.name} を優先対応カテゴリに移動しました。")
                         await channel.send(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を少々お待ち下さい")
                         return
