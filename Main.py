@@ -6,14 +6,17 @@ import os
 TOKEN = os.getenv("UNGURA_DISCORD_TOKEN")
 
 # 設定
-discord.Intents.default().members = True
+intents = discord.Intents.default()
+intents.members = True
+intents.guilds = True
+intents.voice_states = True
 
-IGNORE_LIST = ["Calculator.py", "VCTracker.py"]
+IGNORE_LIST = ["Calculator.py"]
 
 if TOKEN is None:
     raise ValueError("[起動プロセス] Discord BOTトークンが見つかりません")
 
-class MyBot(commands.Bot):
+class UnguraBot(commands.Bot):
     def __init__(self):
         super().__init__(
             command_prefix="/",
@@ -32,5 +35,5 @@ class MyBot(commands.Bot):
     async def on_ready(self):
         print("[起動プロセス] BOTが起動しました")
 
-bot = MyBot()
+bot = UnguraBot()
 bot.run(TOKEN)

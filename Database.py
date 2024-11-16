@@ -44,6 +44,18 @@ class Database():
         # データ保存
         self.save_json(data)
 
+    def get_value(self, *keys):
+        data = self.load_or_create_json()
+        current_data = data
+        for key in keys:  # 最後のキーを除いて処理
+            key = str(key)
+            if key not in current_data or current_data[key] is None:
+                print(f"[データベースログ] {key}の取得を試みましたが見つかりません")
+                raise Exception("不明なデータ")
+            current_data = current_data[key]
+
+        return current_data
+
     def remove_key(self, *keys):
         data = self.load_or_create_json()
         current_data = data
