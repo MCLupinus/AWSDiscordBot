@@ -23,7 +23,16 @@ class VCTracker(commands.Cog):
         self.config = Database("config.json")
         self.check_schedule.start()
 
-    # 有効化
+#    # 有効無効切り替え
+#    @app_commands.command(name="vctracker_active", description="VCの有効状態を切り替えます")
+#    @commands.has_any_role('管理者', 'Discord対応')
+#    @app_commands.describe(is_active = "有効か無効かを切り替え")
+#    async def set_active(self, interaction: discord.Interaction, is_active: bool):
+#        self.config.set_value(str(interaction.guild_id), TRACKER_INDEX, "active", is_active)
+#        active_text = "有効" if is_active else "無効"
+#        await interaction.response.send_message(f"ボイスチャットの監視を{active_text}化しました")
+
+    # 設定
     @app_commands.command(name="vctracker_set", description="VCの開放時間と終了までの時間を設定します")
     @commands.has_any_role('管理者', 'Discord対応')
     @app_commands.describe(
@@ -33,7 +42,6 @@ class VCTracker(commands.Cog):
         category="ボイスチャンネルを作成するカテゴリを設定します"
     )
     async def set(self, interaction: discord.Interaction, open_hours: int, open_minutes: int, open_period: int, category: str = None):
-        
         # エラー処理
         is_valid_hours = 0 <= open_hours <= 23
         is_valid_minutes = 0 <= open_minutes <= 59
@@ -105,6 +113,10 @@ class VCTracker(commands.Cog):
         for guild_id in guild_ids:
             # 開始と終了を取得
             try:
+#                if not self.config.get_value(str(guild_id), TRACKER_INDEX, "active"):
+#                    # 無効化されていたら終了
+#                    print("[VCTracker] 無効中")
+#                    return
                 open_time_data = self.config.get_value(guild_id, TRACKER_INDEX, "open")
                 open_time: datetime = datetime.strptime(self.date_Normalize(open_time_data), '%Y-%m-%d %H:%M:%S')
                 close_time_data = self.config.get_value(guild_id, TRACKER_INDEX, "close")
