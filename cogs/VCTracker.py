@@ -106,9 +106,9 @@ class VCTracker(commands.Cog):
             # 開始と終了を取得
             try:
                 open_time_data = self.config.get_value(guild_id, TRACKER_INDEX, "open")
-                open_time: datetime = datetime.strptime(open_time_data, '%Y-%m-%d %H:%M:%S')
+                open_time: datetime = datetime.strptime(self.date_Normalize(open_time_data), '%Y-%m-%d %H:%M:%S')
                 close_time_data = self.config.get_value(guild_id, TRACKER_INDEX, "close")
-                close_time: datetime = datetime.strptime(close_time_data, '%Y-%m-%d %H:%M:%S')
+                close_time: datetime = datetime.strptime(self.date_Normalize(close_time_data), '%Y-%m-%d %H:%M:%S')
             except:
                 print(f"[VCTracker] {self.bot.get_guild(guild_id).name}サーバーは開放時間が設定されていません")
                 return
@@ -153,10 +153,13 @@ class VCTracker(commands.Cog):
 
                 print(f"[VCTracker] ID:\"{guild_id}\"のサーバーのVCを閉鎖しました")
 
-    @app_commands.command(name="hey", description="アングラBOTを叩き起こします")
-    async def call(self, interaction: discord.Interaction):
-        await self.bot.wait_until_ready()
-        await interaction.response.send_message("時間を更新しました")
+    @commands.Cog.listener()
+    async def on_message(self, message: discord.Message):
+        if message.author == self.bot.user:
+            return
+        if self.bot.user.mentioned_in(message):
+            await self.check_schedule.restart()
+            await message.channel.send("ボイスチャットの監視時間を更新しました。")
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
@@ -227,6 +230,12 @@ class VCTracker(commands.Cog):
 
         except:
             print("[VCTracker] チャンネルの削除中にエラーが発生しました")
+
+    def date_Normalize(self, date: str) -> str:
+        if len(date.split('-')[0]) < 4:
+            year, rest = date.split('-', 1)
+            date = f"{int(year):04d}-{rest}"
+        return date
 
     @check_schedule.before_loop
     async def before_check_schedule(self):
