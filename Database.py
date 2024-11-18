@@ -44,14 +44,24 @@ class Database():
         # データ保存
         self.save_json(data)
 
-    def get_value(self, *keys):
+    def get_value(self, *keys, default_value = None):
+        
+
         data = self.load_or_create_json()
         current_data = data
         for key in keys:  # 最後のキーを除いて処理
             key = str(key)
-            if key not in current_data or current_data[key] is None:
+
+            if (key not in current_data) or (current_data[key] is None):
                 print(f"[データベースログ] {key}の取得を試みましたが見つかりません")
-                raise Exception("不明なデータ")
+                # デフォルトが設定されていれば値をセットする
+                if not default_value is None:
+                    self.set_value(*keys, value=default_value)
+                    # 値が存在しなかったためデフォルトを返す
+                    return default_value
+                    
+                else:
+                    raise Exception("不明なデータ")
             current_data = current_data[key]
 
         return current_data

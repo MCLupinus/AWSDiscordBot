@@ -23,14 +23,14 @@ class VCTracker(commands.Cog):
         self.config = Database("config.json")
         self.check_schedule.start()
 
-#    # 有効無効切り替え
-#    @app_commands.command(name="vctracker_active", description="VCの有効状態を切り替えます")
-#    @commands.has_any_role('管理者', 'Discord対応')
-#    @app_commands.describe(is_active = "有効か無効かを切り替え")
-#    async def set_active(self, interaction: discord.Interaction, is_active: bool):
-#        self.config.set_value(str(interaction.guild_id), TRACKER_INDEX, "active", is_active)
-#        active_text = "有効" if is_active else "無効"
-#        await interaction.response.send_message(f"ボイスチャットの監視を{active_text}化しました")
+    # 有効無効切り替え
+    @app_commands.command(name="vctracker_active", description="VCの有効状態を切り替えます")
+    @commands.has_any_role('管理者', 'Discord対応')
+    @app_commands.describe(is_active = "有効か無効かを切り替え")
+    async def set_active(self, interaction: discord.Interaction, is_active: bool):
+        self.config.set_value(str(interaction.guild_id), TRACKER_INDEX, "active", value=is_active)
+        active_text = "有効" if is_active else "無効"
+        await interaction.response.send_message(f"ボイスチャットの監視を{active_text}化しました")
 
     # 設定
     @app_commands.command(name="vctracker_set", description="VCの開放時間と終了までの時間を設定します")
@@ -113,10 +113,10 @@ class VCTracker(commands.Cog):
         for guild_id in guild_ids:
             # 開始と終了を取得
             try:
-#                if not self.config.get_value(str(guild_id), TRACKER_INDEX, "active"):
-#                    # 無効化されていたら終了
-#                    print("[VCTracker] 無効中")
-#                    return
+                if not self.config.get_value(str(guild_id), TRACKER_INDEX, "active", default_value=True):
+                    # 無効化されていたら終了
+                    print("[VCTracker] 無効中")
+                    return
                 open_time_data = self.config.get_value(guild_id, TRACKER_INDEX, "open")
                 open_time: datetime = datetime.strptime(self.date_Normalize(open_time_data), '%Y-%m-%d %H:%M:%S')
                 close_time_data = self.config.get_value(guild_id, TRACKER_INDEX, "close")
@@ -170,14 +170,14 @@ class VCTracker(commands.Cog):
         if message.author == self.bot.user:
             return
         if self.bot.user.mentioned_in(message):
-            await self.check_schedule.restart()
+            self.check_schedule.restart()
             await message.channel.send("ボイスチャットの監視時間を更新しました。")
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         # VCに参加した場合
         if before.channel is None and after.channel is not None:
-            vc_group:list[int] = self.config.get_value(member.guild.id, TRACKER_INDEX, "managed_vc")
+            vc_group:list[int] = self.config.get_value(member.guild.id, TRACKER_INDEX, "managed_vc", default_value=[])
 
             if len(vc_group) == 0:
                 # 開かれているVCが無ければ終了
@@ -226,7 +226,7 @@ class VCTracker(commands.Cog):
     async def remove_voice_ch(self, guild_id, vc_id):
         try:
             # 既に存在すれば取得
-            vc_group:list[int] = self.config.get_value(guild_id, TRACKER_INDEX, "managed_vc")
+            vc_group:list[int] = self.config.get_value(guild_id, TRACKER_INDEX, "managed_vc", default_value=[])
         except:
             # 存在しなければ終了
             return
