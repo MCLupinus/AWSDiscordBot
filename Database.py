@@ -45,8 +45,6 @@ class Database():
         self.save_json(data)
 
     def get_value(self, *keys, default_value = None):
-        
-
         data = self.load_or_create_json()
         current_data = data
         for key in keys:  # 最後のキーを除いて処理
