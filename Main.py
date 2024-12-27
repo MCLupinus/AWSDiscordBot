@@ -4,6 +4,7 @@ import os
 
 # メイン
 TOKEN = os.getenv("UNGURA_DISCORD_TOKEN")
+print(f"取得したトークン：{TOKEN}")
 
 # 設定
 intents = discord.Intents.default()

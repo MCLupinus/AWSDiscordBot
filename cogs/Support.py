@@ -51,7 +51,7 @@ class Support(commands.Cog):
                             print(f"[サポート] {channel.name} を優先対応カテゴリに移動しました。")
                         except:
                             print(f"[サポート] {channel.name} はカテゴリが超過しているため移動できませんでした。")
-                        await channel.send(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を少々お待ち下さい")
+                        await channel.send(f"```📌このお問い合わせは優先対応としてマークされました。```\n{discord.utils.get(channel.guild.roles, name="運営").mention}の対応を暫くお待ち下さい")
                         return
             
             print("[サポート] 優先対応が必要なメンバーはいません。")
