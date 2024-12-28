@@ -1,0 +1,24 @@
+{
+    "system_log":{
+        "token_not_found": "Discord BOTトークンが見つかりません",
+        "server_not_found": "サーバーが見つかりません",
+        "file_load": "%sを読み込み",
+        "startup_successful": "BOTが起動しました",
+        "not_released": "%sサーバーは開放時間が設定されていません",
+        "vc_disabled": "ボイスチャットは無効中です",
+        "closing_time": "ボイスチャットの利用可能時間外です",
+        "server_add_vc": "ID:\"%s\"のサーバーに%sを追加しました",
+        "server_vc_closed": "ID:\"%s\"のサーバーのVCを閉鎖しました",
+        "channel_removed": "ID:\"%s\"チャンネルを削除しました",
+        "deleting_channel_error": "チャンネルの削除中にエラーが発生しました"
+    },
+    "message":{
+        "vc_monitoring": "ボイスチャットの監視を%s化しました。",
+        "value_error": "有効な%sを設定してください。\n有効値: %s",
+        "create_category": "[%s]カテゴリーにボイスチャンネルを作成するように設定しました\n",
+        "id_not_found": "指定されたIDのカテゴリーは見つかりませんでした\n",
+        "vc_setting_result": "VCの開始時間を %r:%r、開放期間を%r分に設定しました。\n",
+        "fraud_date": "無効な時刻が指定されました。\n",
+        "update_monitoring_time": "ボイスチャットの監視時間を更新しました。"
+    }
+}

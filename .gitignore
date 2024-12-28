@@ -1,2 +1,4 @@
 *.json
+!context.json
+*.log
 __pycache__

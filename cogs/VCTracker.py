@@ -19,8 +19,8 @@ TRACKER_INDEX = "VCtrackingTime"
 class VCTracker(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
         self.config = Database("config.json")
+        self.context = Database("context.json")
         self.check_schedule.start()
 
     # 有効無効切り替え
@@ -30,7 +30,7 @@ class VCTracker(commands.Cog):
     async def set_active(self, interaction: discord.Interaction, is_active: bool):
         self.config.set_value(str(interaction.guild_id), TRACKER_INDEX, "active", value=is_active)
         active_text = "有効" if is_active else "無効"
-        await interaction.response.send_message(f"ボイスチャットの監視を{active_text}化しました")
+        await interaction.response.send_message(self.context.get_value("message", "vc_monitoring") % active_text)
 
     # 設定
     @app_commands.command(name="vctracker_set", description="VCの開放時間と終了までの時間を設定します")
@@ -46,12 +46,12 @@ class VCTracker(commands.Cog):
         is_valid_hours = 0 <= open_hours <= 23
         is_valid_minutes = 0 <= open_minutes <= 59
         if not is_valid_hours or not is_valid_minutes:
-            await interaction.response.send_message("有効な時間を設定してください", ephemeral=True)
+            await interaction.response.send_message(self.context.get_value("message", "value_error") % ("時間", "0時0分から23時59分"), ephemeral=True)
             return
 
         # 開放時間が範囲外であれば終了
         if not (0 <= open_period < 1440):
-            await interaction.response.send_message("開放する期間の最大は24時間以内にしてください", ephemeral=True)
+            await interaction.response.send_message(self.context.get_value("message", "value_error") % ("開放時間", "0分から1439分"), ephemeral=True)
             return
 
         # 時間かかるかもしれないから一旦返事
@@ -72,10 +72,10 @@ class VCTracker(commands.Cog):
 
         if get(interaction.guild.categories, id=category_id):
             result = category_id
-            result_message += f"{interaction.guild.get_channel(category_id).name}カテゴリーにボイスチャンネルを作成するように設定しました\n"
+            result_message += self.context.get_value("message", "create_category") % {interaction.guild.get_channel(category_id).name}
         else:
             result = None
-            result_message += "- 指定されたIDのカテゴリーは見つかりませんでした\n"
+            result_message += "- " + self.context.get_value("message", "id_not_found")
         
         self.config.set_value(str(interaction.guild_id), TRACKER_INDEX, "category", value=result)
 
@@ -92,21 +92,21 @@ class VCTracker(commands.Cog):
 
             self.config.set_value(str(interaction.guild_id), TRACKER_INDEX, "open", value=open_time.strftime('%Y-%m-%d %H:%M:%S'))
             self.config.set_value(str(interaction.guild_id), TRACKER_INDEX, "close", value=close_time.strftime('%Y-%m-%d %H:%M:%S'))
-            result_message += f"VCの開始時間を {open_hours:02d}:{open_minutes:02d}、開放期間を{open_period}分に設定しました。\n"
+            result_message += self.context.get_value("message", "vc_setting_result") % (f"{open_hours:02d}", f"{open_minutes:02d}", open_period)
         except ValueError as e:
-            result_message += "- 無効な時刻が指定されました。\n"
+            result_message += "- " + self.context.get_value("message", "fraud_date")
 
         result_message += "```"
         await interaction.followup.send(result_message)
 
-    @tasks.loop(minutes=15)
+    @tasks.loop(minutes=1)
     async def check_schedule(self):
         # 時間が取得できたギルドだけに実行する
         try:
             data = self.config.load_or_create_json()
             guild_ids = list(data.keys())
         except:
-            print(f"[VCTracker] サーバーがありません")
+            self.bot.logger.error(self.context.get_value("system_log", "server_not_found"))
             return
 
         now = datetime.now()
@@ -115,14 +115,14 @@ class VCTracker(commands.Cog):
             try:
                 if not self.config.get_value(str(guild_id), TRACKER_INDEX, "active", default_value=True):
                     # 無効化されていたら終了
-                    print("[VCTracker] 無効中")
+                    self.bot.logger.info(self.context.get_value("system_log", "disabled"))
                     return
                 open_time_data = self.config.get_value(guild_id, TRACKER_INDEX, "open")
                 open_time: datetime = datetime.strptime(self.date_Normalize(open_time_data), '%Y-%m-%d %H:%M:%S')
                 close_time_data = self.config.get_value(guild_id, TRACKER_INDEX, "close")
                 close_time: datetime = datetime.strptime(self.date_Normalize(close_time_data), '%Y-%m-%d %H:%M:%S')
             except:
-                print(f"[VCTracker] {self.bot.get_guild(guild_id).name}サーバーは開放時間が設定されていません")
+                self.bot.logger.error(self.context.get_value("system_log", "not_released") % (self.bot.get_guild(guild_id).name))
                 return
 
             # 対象時間を正規化
@@ -141,12 +141,16 @@ class VCTracker(commands.Cog):
 
             # 現在時刻と開放時刻を比較
             if open_time <= now < close_time:
+                # 開放時間内の処理
                 if len(vc_group) == 0:
+                    # チャンネルが存在しなければ作成する
                     vc = await self.create_voice_ch(guild_id)
-                    print(f"[VCTracker] ID:\"{guild_id}\"のサーバーに{vc.name}を追加しました")
+                    self.bot.logger.info(self.context.get_value("system_log", "server_add_vc") % (guild_id, vc.name))
                 else:
+                    # 開開放VCが多すぎないかチェックする
                     guild: discord.Guild = self.bot.get_guild(int(guild_id))
                     keep = True
+                    print("使われていないVCが存在します")
                     for vc in vc_group:
                         voice_ch = get(guild.channels, id = vc)
 
@@ -154,16 +158,19 @@ class VCTracker(commands.Cog):
                             await self.remove_voice_ch(guild_id, vc)
 
                         if len(voice_ch.members) == 0:
+                            print("削除対象を発見")
                             keep = False
 
             elif not (open_time <= now < close_time):
+                # 開放時間外の処理
                 if len(vc_group) == 0:
+                    self.bot.logger.info(self.context.get_value("system_log", "closing_time"))
                     return
                 # 開放中のVCを削除
                 for removalbe_vc in vc_group:
                     await self.remove_voice_ch(guild_id, removalbe_vc)
 
-                print(f"[VCTracker] ID:\"{guild_id}\"のサーバーのVCを閉鎖しました")
+                self.bot.logger.info(self.context.get_value("system_log", "server_vc_closed") % (guild_id))
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -171,7 +178,7 @@ class VCTracker(commands.Cog):
             return
         if self.bot.user.mentioned_in(message):
             self.check_schedule.restart()
-            await message.channel.send("ボイスチャットの監視時間を更新しました。")
+            await message.channel.send(self.context.get_value("message", "update_monitoring_time"))
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
@@ -235,13 +242,14 @@ class VCTracker(commands.Cog):
             voice_ch: discord.VoiceChannel = get(guild.channels, id=vc_id)
 
             await voice_ch.delete()
+            self.bot.logger.info(self.context.get_value("system_log", "channel_removed") % vc_id)
 
             # リストからも削除
             vc_group.remove(vc_id)
             self.config.set_value(guild_id, TRACKER_INDEX, "managed_vc", value=vc_group)
 
         except:
-            print("[VCTracker] チャンネルの削除中にエラーが発生しました")
+            self.bot.logger.error(self.context.get_value("system_log", "deleting_channel_error"))
 
     def date_Normalize(self, date: str) -> str:
         if len(date.split('-')[0]) < 4:
