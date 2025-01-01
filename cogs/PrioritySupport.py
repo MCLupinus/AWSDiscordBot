@@ -12,7 +12,7 @@ from discord import app_commands
 from discord.ext import commands
 from Database import Database
 
-class Support(commands.Cog):
+class PrioritySupport(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -95,4 +95,4 @@ class Support(commands.Cog):
             await interaction.response.send_message("チャンネルの移動中にエラーが発生しました。")
 
 async def setup(bot):
-    await bot.add_cog(Support(bot))
+    await bot.add_cog(PrioritySupport(bot))

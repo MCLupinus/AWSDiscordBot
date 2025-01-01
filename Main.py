@@ -22,10 +22,11 @@ logging.basicConfig(
 context = Database("context.json")
 
 # 設定
-intents = discord.Intents.default()
-intents.members = True
-intents.guilds = True
-intents.voice_states = True
+#intents = discord.Intents.default()
+#intents.message_content = True
+#intents.members = True
+#intents.guilds = True
+#intents.voice_states = True
 
 IGNORE_LIST = ["Calculator.py"]
 

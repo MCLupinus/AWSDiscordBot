@@ -176,6 +176,10 @@ class VCTracker(commands.Cog):
     async def on_message(self, message: discord.Message):
         if message.author == self.bot.user:
             return
+        
+        if message.reference:
+            return
+
         if self.bot.user.mentioned_in(message):
             self.check_schedule.restart()
             await message.channel.send(self.context.get_value("message", "update_monitoring_time"))
@@ -237,6 +241,17 @@ class VCTracker(commands.Cog):
         except:
             # 存在しなければ終了
             return
+        
+        guild: discord.Guild = self.bot.get_guild(int(guild_id))
+        voice_ch: discord.VoiceChannel = get(guild.channels, id=vc_id)
+
+        await voice_ch.delete()
+        self.bot.logger.info(self.context.get_value("system_log", "channel_removed") % vc_id)
+
+        # リストからも削除
+        vc_group.remove(vc_id)
+        self.config.set_value(guild_id, TRACKER_INDEX, "managed_vc", value=vc_group)
+        return
         try:
             guild: discord.Guild = self.bot.get_guild(int(guild_id))
             voice_ch: discord.VoiceChannel = get(guild.channels, id=vc_id)
