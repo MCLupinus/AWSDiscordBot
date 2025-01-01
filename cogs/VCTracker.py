@@ -242,16 +242,6 @@ class VCTracker(commands.Cog):
             # 存在しなければ終了
             return
         
-        guild: discord.Guild = self.bot.get_guild(int(guild_id))
-        voice_ch: discord.VoiceChannel = get(guild.channels, id=vc_id)
-
-        await voice_ch.delete()
-        self.bot.logger.info(self.context.get_value("system_log", "channel_removed") % vc_id)
-
-        # リストからも削除
-        vc_group.remove(vc_id)
-        self.config.set_value(guild_id, TRACKER_INDEX, "managed_vc", value=vc_group)
-        return
         try:
             guild: discord.Guild = self.bot.get_guild(int(guild_id))
             voice_ch: discord.VoiceChannel = get(guild.channels, id=vc_id)
