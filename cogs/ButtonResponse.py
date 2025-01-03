@@ -49,15 +49,15 @@ class SupportForum(discord.ui.Modal):
         await thread.send(self.detail);
         
         # 利用数を記録
-        count = self.config.get_value(interaction.guild_id, "general", "used_count", default_value=0)
+        count = self.config.get_value(interaction.guild_id, "support", "used_count", default_value=0)
         count += 1
-        self.config.set_value(interaction.guild_id, "general", "used_count", value=count)
+        self.config.set_value(interaction.guild_id, "support", "used_count", value=count)
 
         # 作成したスレッドへ案内
         await self.select_message.followup.send(f"プライベートチャットを作成しました。: {thread.jump_url}\n運営の対応をお待ちください。",ephemeral=True)
 
         # 運営用に通知
-        operate_ch = self.config.get_value(interaction.guild_id, "general", "operate_ch")
+        operate_ch = self.config.get_value(interaction.guild_id, "support", "alarm_channel")
         if not operate_ch:
             return
         
@@ -193,12 +193,12 @@ class ButtonResponse(commands.Cog):
         await interaction.followup.send("ありがとうございます。\n担当者が対応いたします。しばらくお待ちください。")
 
         # 利用数を記録
-        count = self.config.get_value(interaction.guild_id, "general", "used_count", default_value=0)
+        count = self.config.get_value(interaction.guild_id, "support", "used_count", default_value=0)
         count += 1
-        self.config.set_value(interaction.guild_id, "general", "used_count", value=count)
+        self.config.set_value(interaction.guild_id, "support", "used_count", value=count)
 
         # 運営用に通知
-        operate_ch = self.config.get_value(interaction.guild_id, "general", "operate_ch")
+        operate_ch = self.config.get_value(interaction.guild_id, "support", "operate_ch")
         if not operate_ch:
             return
         
