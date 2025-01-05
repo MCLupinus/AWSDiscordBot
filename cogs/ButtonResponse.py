@@ -198,7 +198,7 @@ class ButtonResponse(commands.Cog):
         self.config.set_value(interaction.guild_id, "support", "used_count", value=count)
 
         # 運営用に通知
-        operate_ch = self.config.get_value(interaction.guild_id, "support", "operate_ch")
+        operate_ch = self.config.get_value(interaction.guild_id, "support", "alarm_channel")
         if not operate_ch:
             return
         
