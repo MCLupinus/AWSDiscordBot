@@ -105,8 +105,6 @@ class PremiseSelectMenu(discord.ui.View):
             # スレッドに最初の投稿を作成
             await thread.send(f"支援ありがとうございます。選択された内容は以下のとおりでお間違いありませんか？\n購入内容: **{self.premise_selection}**\nお支払い方法: **{self.payment_selection}**\n\n「はい」を押すまで手続きは進行しません。\n内容の変更はお支払いが完了するまでいつでも可能です。", view=view)
 
-
-
 class SupportForum(discord.ui.Modal):
     def __init__(self, button_data:dict, select:str, select_message: discord.Interaction):
         super().__init__(title=f"お問い合わせ-{select}", timeout=None, custom_id=f"id{select}")
