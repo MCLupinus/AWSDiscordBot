@@ -101,7 +101,7 @@ class ButtonResponse(commands.Cog):
         view.add_item(completion_button)
 
         notice_ch = interaction.guild.get_channel(operate_ch)
-        await notice_ch.send(f"## 新しい購入手続きがあります\n{interaction.channel.jump_url}\nid:`{interaction.channel.id}`", view=view)
+        await notice_ch.send(f"## 新しい購入手続きがあります\n購入者: {interaction.user.mention}\n{interaction.channel.jump_url}\nid:`{interaction.channel.id}`", view=view)
 
     async def send_purchase_cancel(self, interaction: discord.Interaction):
         await interaction.channel.delete()
