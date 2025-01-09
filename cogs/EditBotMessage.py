@@ -15,12 +15,14 @@ class EditMessageModal(discord.ui.Modal):
     def __init__(self, message: discord.Message):
         super().__init__(title="メッセージを編集")
         self.message = message
-        self.edit_field = discord.ui.TextInput(label="編集メッセージ", style=discord.TextStyle.paragraph, default=message.content)
-        self.add_item(self.edit_field)
+        self.content = discord.ui.TextInput(label="編集メッセージ", style=discord.TextStyle.paragraph, default=message.content)
+        self.add_item(self.content)
 
     async def on_submit(self, interaction: discord.Interaction):
-        await self.message.edit(content=self.edit_field)
-        await interaction.response.send_message("メッセージを編集しました", ephemeral=True)
+        await interaction.response.defer()
+        if self.content.value == "::UIUpdate":
+            return
+        await self.message.edit(content=self.content)
 
 class EditBotMessage(commands.Cog):
     def __init__(self, bot):

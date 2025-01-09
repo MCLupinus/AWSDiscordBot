@@ -60,26 +60,27 @@ class ButtonResponse(commands.Cog):
             await self.send_purchase_message(interaction, button_data)
 
     async def send_forum_message(self, interaction: discord.Interaction, button_data: dict):
-        if self.is_supportable(interaction, button_data):
+        if await self.is_supportable(interaction, button_data):
             await interaction.followup.send("お問い合わせありがとうございます。\nこちらのメッセージは自動送信です。あなたにのみ表示されており、時間経過で削除されます。\n\n対応をスムーズに行うためにお問い合わせ内容(カテゴリ)の選択と、カテゴリ選択後に表示されるフォーラムのタイトル入力を適切に行ってください。\nフォーラムを送信すると担当者が交代して対応いたします。\n対応までに時間がかかる場合がございますがご了承ください。", ephemeral=True, view=PremiseSelectMenu(button_data, "forum"))
 
     async def send_purchase_message(self, interaction: discord.Interaction, button_data: dict):
-        if self.is_supportable(interaction, button_data):
+        if await self.is_supportable(interaction, button_data):
             await interaction.followup.send("ご利用ありがとうございます。\nこちらのメッセージは自動送信です。あなたにのみ表示されており、時間経過で削除されます。\n購入手続きは運営が順を追って対応いたします。\n\n購入する内容(カテゴリ)の選択をすると運営とのプライベートチャットが開かれます。\nカテゴリの選択後、決定ボタンを押すことで購入内容が確定されます。", ephemeral=True, view=PremiseSelectMenu(button_data, "purchase"))
 
     async def is_supportable(self, interaction: discord.Interaction, button_data: dict) -> bool:
         actice_threads = await interaction.guild.active_threads()
-        if len(len(actice_threads)) < THREAD_LIMIT:
-            return False
+        if len(actice_threads) < THREAD_LIMIT:
+            return True
 
         await interaction.followup.send("現在、お問い合わせのプライベートチャットが大変込み合っています。しばらく待ってからもう一度お試しください。", ephemeral=True)
         
         operate_ch = self.config.get_value(interaction.guild_id, "support", "alarm_channel")
         if not operate_ch:
-            return
+            return False
         
         notice_ch = interaction.guild.get_channel(operate_ch)
-        notice_ch.send("## お問い合わせが飽和しています。\n解決したお問い合わせチャットをアーカイブ化してください。")
+        await notice_ch.send("## お問い合わせが飽和しています。\n解決したお問い合わせチャットをアーカイブ化してください。")
+        return False
 
     async def send_purchase_ok(self, interaction: discord.Interaction):
         await interaction.edit_original_response(content=interaction.message.content, view=None)
@@ -124,6 +125,7 @@ class ButtonResponse(commands.Cog):
             await interaction.edit_original_response(content=interaction.message.content, view=view)
 
     async def delete_thread(self, interaction: discord.Interaction):
+        
         # 押されたボタンから対象のスレッドを取得
         pattern = r"\`(.*?)\`"
         matches = re.findall(pattern, interaction.message.content)
