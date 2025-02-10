@@ -84,7 +84,7 @@ class ButtonResponse(commands.Cog):
 
     async def send_purchase_ok(self, interaction: discord.Interaction):
         await interaction.edit_original_response(content=interaction.message.content, view=None)
-        await interaction.followup.send("ありがとうございます。\n担当者が対応いたします。しばらくお待ちください。")
+        await interaction.followup.send("ありがとうございます。\n担当者が対応いたします。しばらくお待ちください。", ephemeral=True)
 
         # 利用数を記録
         count = self.config.get_value(interaction.guild_id, "support", "used_count", default_value=0)
@@ -102,7 +102,7 @@ class ButtonResponse(commands.Cog):
         view.add_item(completion_button)
 
         notice_ch = interaction.guild.get_channel(operate_ch)
-        await notice_ch.send(f"## 新しい購入手続きがあります\n購入者: {interaction.user.mention}\n{interaction.channel.jump_url}\nid:`{interaction.channel.id}`", view=view)
+        await notice_ch.send(f"## 新しい購入手続きがあります\n購入者: {interaction.user.mention}\n[{interaction.channel.name}]({interaction.channel.jump_url})\nid:`{interaction.channel.id}`", view=view)
 
     async def send_purchase_cancel(self, interaction: discord.Interaction):
         await interaction.channel.delete()

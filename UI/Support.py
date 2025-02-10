@@ -160,4 +160,4 @@ class SupportForum(discord.ui.Modal):
         view.add_item(completion_button)
         
         notice_ch = interaction.guild.get_channel(operate_ch)
-        await notice_ch.send(f"## 新しいお問い合わせがあります\n質問者: {interaction.user.mention}\n{thread.jump_url}\nid:`{thread.id}`", view=view)
+        await notice_ch.send(f"## 新しいお問い合わせがあります\n質問者: {interaction.user.mention}\n[{title}]({thread.jump_url})\nid:`{thread.id}`", view=view)
