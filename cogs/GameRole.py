@@ -11,24 +11,25 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+GAME_ROLE_MIN_NAME = "#game_role_min"
+GAME_ROLE_MAX_NAME = "#game_role_max"
+DEBUG = "debug"
+
 class GameRole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     async def process_role_change(self, interaction: discord.Interaction, role: discord.Role, members: str, add_role: bool):
-        top_role_name = role.name + "-TOP"
-        top_role = discord.utils.get(interaction.guild.roles, name=top_role_name)
+        min_priority = discord.utils.get(interaction.guild.roles, name=GAME_ROLE_MIN_NAME)
+        max_priority = discord.utils.get(interaction.guild.roles, name=GAME_ROLE_MAX_NAME)
+        debug = discord.utils.get(interaction.guild.roles, name=DEBUG)
+
+        is_game_role = min_priority.position < role.position < max_priority.position
 
         is_role_member = role in interaction.user.roles             # 実行者がロールを持っているか
-        is_game_role = top_role in interaction.guild.roles          # ゲーム内役職用のロールか(TOPロールの場合は-TOP-TOPとなるため除外される)
-        for interactor_role in interaction.user.roles:              # 実行者が-TOPロールのみを所持している場合を考慮
-            if interactor_role.name == top_role_name:
-                is_role_member = True
-                # 実行者にもつけてあげる
-                await interaction.user.add_roles(role)
-                break
-
-        is_admin = interaction.user.guild_permissions.manage_roles  # ロール管理権限を持っているか
+        is_admin = False
+        if not debug in interaction.user.roles: # デバッグが有効の場合調べない
+            is_admin = interaction.user.guild_permissions.manage_roles  # ロール管理権限を持っているか
 
         if (not is_role_member or not is_game_role) and not is_admin:
             await interaction.response.send_message("このコマンドを実行する権限がありません。", ephemeral=True)
