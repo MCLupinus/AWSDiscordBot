@@ -11,9 +11,7 @@ import discord
 from Database import Database
 
 PAYMENT_METHOD = [
-    "クレジットカード",
-    "銀行振込",
-    "PayPay"
+    "クレジットカード"
 ]
 
 class PremiseSelectMenu(discord.ui.View):
